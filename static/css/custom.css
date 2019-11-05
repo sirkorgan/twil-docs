@@ -1,5 +1,9 @@
 /* your custom css */
 
+h2 {
+  border-bottom: 1px solid black;
+}
+
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 
