@@ -12,7 +12,7 @@ const path = require("path");
 // List of projects/orgs using your project for the users page.
 const users = [
   {
-    caption: "User1",
+    caption: "Nobody",
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/image.jpg'.
     image: "/img/undraw_open_source.svg",
@@ -23,17 +23,17 @@ const users = [
 
 const siteConfig = {
   customDocsPath: path.basename(__dirname) + "/docs",
-  title: "Test Site", // Title for your website.
-  tagline: "A website for testing",
-  url: "https://your-docusaurus-test-site.com", // Your website URL
+  title: "The Wars in Lombardy", // Title for your website.
+  tagline: "Documentation, etc.",
+  url: "https://twil-docs.sirkorgan.now.sh", // Your website URL
   baseUrl: "/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: "test-site",
-  organizationName: "facebook",
+  projectName: "twil-docs",
+  organizationName: "sirkorgan",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
@@ -41,13 +41,13 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     { doc: "doc1", label: "Docs" },
-    { doc: "doc4", label: "API" },
-    { page: "help", label: "Help" },
+    // { doc: "doc4", label: "API" },
+    // { page: "help", label: "Help" },
     { blog: true, label: "Blog" }
   ],
 
   // If you have users set above, you add it here:
-  users,
+  // users,
 
   /* path to images for header/footer */
   headerIcon: "img/favicon.ico",
@@ -56,8 +56,8 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: "#251b86",
-    secondaryColor: "#19125d"
+    primaryColor: "#20232a",
+    secondaryColor: "#575d6b"
   },
 
   /* Custom fonts for website */
