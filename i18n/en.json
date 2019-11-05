@@ -20,13 +20,19 @@
       },
       "doc5": {
         "title": "Fifth Document"
+      },
+      "goldenage": {
+        "title": "Notes from Golden Age 1861 Rules",
+        "sidebar_label": "Golden Age 1861 Notes"
       }
     },
     "links": {
+      "Golden Age Notes": "Golden Age Notes",
       "Docs": "Docs",
       "Blog": "Blog"
     },
     "categories": {
+      "Wes's notes": "Wes's notes",
       "Docusaurus": "Docusaurus",
       "First Category": "First Category",
       "Second Category": "Second Category"
