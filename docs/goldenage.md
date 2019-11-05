@@ -5,119 +5,8 @@ sidebar_label: Golden Age 1861 Notes
 ---
 
 See rulebook here: https://drive.google.com/file/d/1-i4dOf869BljCSbp8YhmE87uYMlFX2Lz/view
-See also [Test Gallery](/test-gallery).
 
-# System Objects
-
-"Business logic" objects
-
-## Game
-
-- ID
-- Player list
-- Turn list
-
-## Player
-
-These are the actual humans playing the game. "Ingame" players are Nations and are considered a Game Object rather than a System Object, and are stored as part of the Turn state.
-
-- ID
-- Name
-
-## Turn
-
-- ID
-- Game ID
-- Turn number
-- Year
-- Season
-- Resolved?
-- Orders: mapped nation ID -> submitted orders
-- Timers
-- Logs
-  [Game Objects]
-
-If turn has been resolved (the turn is historical), turn additionally contains snapshots (or references to snapshots) of timers/tiles/orders/logs/etc from the moment when turn resolution is complete.
-
-> **Note:** for the purposes scheduling timers, the phrases "end of Fall 1861" and "start of Winter 1861" are practically interchangeable. Both will have the associated events (ex. authorized loan payments) resolve during the resolution of Fall 1861. Log entries, however, will be grouped under the mentioned season (Fall 1861 or Winter 1861 in the above examples).
-
-- `applyOrders`: calls flatMap.reduce on the order map using a reducer which starts with this Turn object and accumulates the mutations of all orders and is finally returned.
-- Has `resolve` function which returns a new Turn. If any orders have been queued, they are applied before the turn state is resolved. This function does not mutate the Turn object on which it is called.
-
-### Order
-
-Record of an order submitted on a turn, or intended to be submitted on a turn if the turn has not yet resolved.
-
-- ID (identify this particular issued order)
-- Issuer: nation ID
-- Turn number
-- Class: Military, Economic, Diplomatic, etc.
-- Name: March, Invade, etc. this is a one-word short form for filters and command syntax
-- Friendly Name:
-
-#### Parameters
-
-- `validate(turn)`: Throws an Error if the Order is malformed, or cannot be legally applied on the given turn.
-- `apply(turn)`: Returns a modified copy of the given turn object. Turn is not mutated. Validation is not performed, so it is possible that the Turn will become unresolvable if an invalid order is applied. **NOTE: It must not be possible for the application of an Order to cause other Orders to become invalid. Only Turn resolution may make changes which can invalidate the Orders which were legal before resolution.** NOTE NOTE - what about movement action budget? Sequencing of orders determines whether usage of movement actions is legal! Order validation needs an extra step where the orders are validated singly and as a sequence to determine that interactions between orders are valid!
-
-#### Possible invalidating transformations (Turn may become unresolvable)
-
-- list
-
-#### Always-valid transformations (Turn can be resolved)
-
-Note that the order itself may be illegal on this turn based on previous orders (ie. all available naval movements can be consumed, preventing further move orders... UNLESS movement action debt is allowed)
-
-- list
-
-### Timer
-
-Created as a side effect of order application or turn resolution. The timer state changes each turn.
-
-- `onNextTurn(turn)`:
-
-Examples
-
-- Income every Spring and Autumn from connected provinces
-- Pay military upkeep every Spring
-- Income from Prestige Achievements once per year
-- Loans
-- Trade agreements; publicity requirements and payment schedules
-- Treaty expiration dates and milestones
-- Building construction
-- Unit production
-- Diplomatic integration. Includes multiple stages of scheduled payments on condition that some military force is present, among others. See pages 13-14.
-- Military occupation of a province. Note: Refund half cost of in-progress construction at time of invasion (p.15). Roll to capture enemy Artillery (p.22).
-- Use of captured superior military technology (Artillery, Warships, Battleships) for 1 year before salvaging for half of unit cost.
-- Abandoned ship waits 4 seasons to be recovered, before being removed from play. See page 26 for capturing abandoned ships.
-- Forceful annexation: after occupation, nation opts to annex. Takes 4 years with special risks. Nationalist revolt checks every Summer until integration. Annexation paused while nationalist rebels occupy the province. See p.17 for details.
-- Puppeting: after occupation, nation opts to puppet. Takes 4 years with special limitations.
-
-Timers must:
-
-- process stages/milestone events (start, progress event(s), completion)
-- perform validation checks every turn (after each stage, the validation checks may change)
-- be able to be paused or otherwise modified arbitrarily by the system
-
-### Trigger
-
-Similar to a Timer, but instead of firing on turn number changes, it fires when specific conditions of turn state are satisfied.
-
-- It may be better to unify Timers and Triggers into a single flexible event handler. Then again, there are two APIs to implement: `onNextTurn` for Timers, `shouldDoTrigger` and `doTrigger` for Triggers. So maybe separate is best.
-
-### Event Log
-
-Record of events which were produced during order application and turn resolution. Events are tagged with meta-data to make them more easily categorizable and searchable.
-
-- List of events
-
-### Notification Log
-
-Notifications indicate required action or the actions of others involving the Nation - for example, notification that a scheduled payment is due this turn and requires authorization, or that a province has been invaded by another Nation, or that a diplomatic message has arrived. Notifications are for events which are specifically relevant to a particular Nation planning to submit orders (especially) during this turn and in future turns.
-
-- List of notifications and source events here
-
-### Order of Turn Resolution Operations
+## Process of Turn Resolution
 
 From rulebook, with changes and additions for clarity, and start-of-next-turn things moved to end-of-this-turn.
 
@@ -144,9 +33,7 @@ When all orders are submitted and moderator triggers turn resolution, the follow
 - Collect income (end of Winter/Summer)(logged as start of Spring/Autumn)
 - Advance to next Season
 
-# Game Objects
-
-## Nation
+## Nations
 
 - ID
 - Name
@@ -160,11 +47,11 @@ When all orders are submitted and moderator triggers turn resolution, the follow
 - Currency
 - Tech level: 1..5
 
-### Further reading on Currency
+#### Further reading on Currency
 
 - Tech level effect on economy, page 7
 
-## Tile
+## Tiles / Locations
 
 - ID
 - Type: land/province, sea
@@ -205,7 +92,7 @@ When all orders are submitted and moderator triggers turn resolution, the follow
 - Blockades, straits, and canals, page 12
 - Neutral provinces, puppet states, annexation, and diplomatic integration, page 13
 
-## Unit
+## Units
 
 - ID
 - Land?
@@ -237,7 +124,7 @@ When all orders are submitted and moderator triggers turn resolution, the follow
 
 - Supply, page 8
 
-## Building
+## Buildings
 
 - ID
 - Name: given/generated
@@ -253,7 +140,7 @@ Hooks: validate, pre, post. For example, building a canal. Keep logic for all co
 
 - See page 26-27.
 
-#### Provisional Capital
+### Provisional Capital
 
 ### Port
 
@@ -271,26 +158,11 @@ Hooks: validate, pre, post. For example, building a canal. Keep logic for all co
 
 - Blockades, straits, and canals, page 12. **Note:** a sea/passive blockade disconnects a tile from the capital, but a port/active blockade targets the port specifically
 
-# Orders
+## Orders (General)
 
 The rule book can be accessed at the following location: https://drive.google.com/file/d/1-i4dOf869BljCSbp8YhmE87uYMlFX2Lz/view
 
-```
-class BaseOrder {
-  constructor(command, ...args) {
-	  this.command = command;
-		this.args = args;
-	}
-
-	// This method should return a modified turnState
-	apply(turnState) { }
-
-	// This method should throw an Error if the order cannot be applied to the turnState
-	validate(turnState) { }
-};
-```
-
-## Meta
+### Meta
 
 These orders are directives which apply only to the use of other orders, and do not exist as "real" orders in the system, since they do not transform the turn state.
 
@@ -304,7 +176,7 @@ move ...
 move ...
 ```
 
-## Game Setup
+## Orders - Game Setup
 
 ### Deploy
 
@@ -314,7 +186,7 @@ The `deploy` order places a Nation's starting resource on the map, and is only a
 deploy {resource} {location}
 ```
 
-## Military (Land)
+## Orders - Military (Land)
 
 Orders pertaining to military units, primarily Infantry. Each unit in a province receives orders individually.
 
@@ -388,7 +260,7 @@ Must be the first order issued on the turn following the occupation of a Nation'
 
 - See page 20-21 for Infantry build costs and detailed order descriptions, including march/invade bounce rules.
 
-## Military (Naval)
+## Orders - Military (Naval)
 
 ### Move
 
@@ -445,7 +317,7 @@ Warship disembarks selected embarked land forces to a target adjacent coastal pr
 - This order consumes one movement action.
 - If the target adjacent coastal province does not contain a friendly Port, or the disembarking naval unit has not entered the Port, the disembarked forces will land but may not receive orders and will suffer a -3 penalty to each die roll in combat until the turn ends.
 
-## Economic
+## Orders - Economic
 
 Orders pertaining to economic investment and national infrastructure.
 
@@ -548,7 +420,7 @@ Calms reactionary unrest if performed before a tech revolt occurs. See p.18.
 
 Authorize a scheduled payment, causing the money to be transferred during turn resolution.
 
-## Diplomatic
+## Orders - Diplomatic
 
 Orders pertaining to the nation's relationships with other nations, including trade.
 
@@ -578,6 +450,61 @@ While using a provisional capital, and after recapturing an occupied original ca
 
 - Full seasonal income is restored when a permanent capital is in use.
 - See page 27.
+
+## System Objects
+
+### Player
+
+These are the actual humans playing the game. "Ingame" players are Nations and are considered a Game Object rather than a System Object, and are stored as part of the Turn state.
+
+### Turn
+
+If turn has been resolved (the turn is historical), turn additionally contains snapshots (or references to snapshots) of timers/tiles/orders/logs/etc from the moment when turn resolution is complete.
+
+> **Note:** for the purposes scheduling timers, the phrases "end of Fall 1861" and "start of Winter 1861" are practically interchangeable. Both will have the associated events (ex. authorized loan payments) resolve during the resolution of Fall 1861. Log entries, however, will be grouped under the mentioned season (Fall 1861 or Winter 1861 in the above examples).
+
+### Order
+
+Record of an order submitted on a turn, or intended to be submitted on a turn if the turn has not yet resolved.
+
+### Timer
+
+Created as a side effect of order application or turn resolution. The timer state changes each turn.
+
+Examples
+
+- Income every Spring and Autumn from connected provinces
+- Pay military upkeep every Spring
+- Income from Prestige Achievements once per year
+- Loans
+- Trade agreements; publicity requirements and payment schedules
+- Treaty expiration dates and milestones
+- Building construction
+- Unit production
+- Diplomatic integration. Includes multiple stages of scheduled payments on condition that some military force is present, among others. See pages 13-14.
+- Military occupation of a province. Note: Refund half cost of in-progress construction at time of invasion (p.15). Roll to capture enemy Artillery (p.22).
+- Use of captured superior military technology (Artillery, Warships, Battleships) for 1 year before salvaging for half of unit cost.
+- Abandoned ship waits 4 seasons to be recovered, before being removed from play. See page 26 for capturing abandoned ships.
+- Forceful annexation: after occupation, nation opts to annex. Takes 4 years with special risks. Nationalist revolt checks every Summer until integration. Annexation paused while nationalist rebels occupy the province. See p.17 for details.
+- Puppeting: after occupation, nation opts to puppet. Takes 4 years with special limitations.
+
+Timers must:
+
+- process stages/milestone events (start, progress event(s), completion)
+- perform validation checks every turn (after each stage, the validation checks may change)
+- be able to be paused or otherwise modified arbitrarily by the system
+
+### Trigger
+
+Similar to a Timer, but instead of firing on turn number changes, it fires when specific conditions of turn state are satisfied.
+
+### Event Log
+
+Record of events which were produced during order application and turn resolution. Events are tagged with meta-data to make them more easily categorizable and searchable.
+
+### Notification Log
+
+Notifications indicate required action or the actions of others involving the Nation - for example, notification that a scheduled payment is due this turn and requires authorization, or that a province has been invaded by another Nation, or that a diplomatic message has arrived. Notifications are for events which are specifically relevant to a particular Nation planning to submit orders (especially) during this turn and in future turns.
 
 ## System Events
 
