@@ -5,37 +5,21 @@
     "previous": "Previous",
     "tagline": "Documentation, etc.",
     "docs": {
-      "doc1": {
-        "title": "Latin-ish",
-        "sidebar_label": "Example Page"
-      },
-      "doc2": {
-        "title": "document number 2"
-      },
-      "doc3": {
-        "title": "This is document number 3"
-      },
-      "doc4": {
-        "title": "Other Document"
-      },
-      "doc5": {
-        "title": "Fifth Document"
-      },
       "goldenage": {
         "title": "Notes from Golden Age 1861 Rules",
         "sidebar_label": "Golden Age 1861 Notes"
+      },
+      "rules": {
+        "title": "Summary of Rules",
+        "sidebar_label": "Summary of Rules"
       }
     },
     "links": {
-      "Golden Age Notes": "Golden Age Notes",
-      "Docs": "Docs",
-      "Blog": "Blog"
+      "Rules": "Rules"
     },
     "categories": {
-      "Wes's notes": "Wes's notes",
-      "Docusaurus": "Docusaurus",
-      "First Category": "First Category",
-      "Second Category": "Second Category"
+      "The Wars in Lombardy": "The Wars in Lombardy",
+      "Old Stuff": "Old Stuff"
     }
   },
   "pages-strings": {

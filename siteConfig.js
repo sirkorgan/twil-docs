@@ -40,11 +40,11 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: "goldenage", label: "Golden Age 1861 Notes" },
-    { doc: "doc1", label: "Docs" },
+    { doc: "rules", label: "Rules" }
+    // { doc: "goldenage", label: "Golden Age 1861 Notes" },
     // { doc: "doc4", label: "API" },
     // { page: "help", label: "Help" },
-    { blog: true, label: "Blog" }
+    // { blog: true, label: "Blog" }
   ],
 
   // If you have users set above, you add it here:
@@ -76,7 +76,7 @@ const siteConfig = {
   */
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
+  copyright: `Copyright © ${new Date().getFullYear()} Golden Age 1861 Team`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
